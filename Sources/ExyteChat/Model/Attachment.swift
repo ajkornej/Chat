@@ -57,10 +57,10 @@ public struct Attachment: Codable, Identifiable, Hashable {
 
 
 public struct File: Codable, Hashable, Equatable {
-    let filename: String
-    let contentType: String
-    let displayTitle: String
-    let downloadUrl: String
-    let `extension`: String
-    let fileSize: Int
+    public let filename: String
+    public let contentType: String
+    public let displayTitle: String
+    public let downloadUrl: String
+    public let `extension`: String
+    public let fileSize: Int
 }
