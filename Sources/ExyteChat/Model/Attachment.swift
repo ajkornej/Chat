@@ -63,4 +63,14 @@ public struct File: Codable, Hashable, Equatable {
     public let downloadUrl: String
     public let `extension`: String
     public let fileSize: Int
+    
+    
+    public init(filename: String, contentType: String, displayTitle: String, downloadUrl: String, `extension`: String , fileSize: Int) {
+        self.filename = filename
+        self.contentType = contentType
+        self.displayTitle = displayTitle
+        self.downloadUrl = downloadUrl
+        self.extension = `extension`
+        self.fileSize = fileSize
+    }
 }
