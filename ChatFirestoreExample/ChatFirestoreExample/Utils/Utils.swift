@@ -49,58 +49,54 @@ extension Date {
         let now = Date()
         let earliest = (now as NSDate).earlierDate(date)
         let latest = (earliest == now) ? date : now
-        let components:DateComponents = (calendar as NSCalendar).components([NSCalendar.Unit.minute , NSCalendar.Unit.hour , NSCalendar.Unit.day , NSCalendar.Unit.weekOfYear , NSCalendar.Unit.month , NSCalendar.Unit.year , NSCalendar.Unit.second], from: earliest, to: latest, options: NSCalendar.Options())
+        let components = calendar.dateComponents([.year, .month, .weekOfYear, .day, .hour, .minute, .second],
+                                               from: earliest, to: latest)
         
-        if components.year! >= 2 {
-            return "\(components.year!) years ago"
-        } else if components.year! >= 1 {
-            if numericDates {
-                return "1 year ago"
-            } else {
-                return "Last year"
-            }
-        } else if components.month! >= 2 {
-            return "\(components.month!) months ago"
-        } else if components.month! >= 1 {
-            if numericDates {
-                return "1 month ago"
-            } else {
-                return "Last month"
-            }
-        } else if components.weekOfYear! >= 2 {
-            return "\(components.weekOfYear!) weeks ago"
-        } else if components.weekOfYear! >= 1 {
-            if numericDates {
-                return "1 week ago"
-            } else {
-                return "Last week"
-            }
-        } else if components.day! >= 2 {
-            return "\(components.day!) days ago"
-        } else if components.day! >= 1 {
-            if numericDates {
-                return "1 day ago"
-            } else {
-                return "Yesterday"
-            }
-        } else if components.hour! >= 2 {
-            return "\(components.hour!) hours ago"
-        } else if components.hour! >= 1 {
-            if numericDates {
-                return "1 hour ago"
-            } else {
-                return "An hour ago"
-            }
-        } else if components.minute! >= 2 {
-            return "\(components.minute!) minutes ago"
-        } else if components.minute! >= 1 {
-            if numericDates {
-                return "1 minute ago"
-            } else {
-                return "A minute ago"
-            }
+        guard let year = components.year,
+              let month = components.month,
+              let week = components.weekOfYear,
+              let day = components.day,
+              let hour = components.hour,
+              let minute = components.minute else {
+            return "Только что"
+        }
+        
+        // Логика формирования русских фраз
+        func pluralForm(n: Int, form1: String, form2: String, form5: String) -> String {
+            let n = abs(n) % 100
+            let n1 = n % 10
+            if n >= 11 && n <= 19 { return form5 }
+            if n1 == 1 { return form1 }
+            if n1 >= 2 && n1 <= 4 { return form2 }
+            return form5
+        }
+
+        if year >= 2 {
+            return "\(year) \(pluralForm(n: year, form1: "год", form2: "года", form5: "лет")) назад"
+        } else if year >= 1 {
+            return numericDates ? "1 год назад" : "В прошлом году"
+        } else if month >= 2 {
+            return "\(month) \(pluralForm(n: month, form1: "месяц", form2: "месяца", form5: "месяцев")) назад"
+        } else if month >= 1 {
+            return numericDates ? "1 месяц назад" : "В прошлом месяце"
+        } else if week >= 2 {
+            return "\(week) \(pluralForm(n: week, form1: "неделю", form2: "недели", form5: "недель")) назад"
+        } else if week >= 1 {
+            return numericDates ? "1 неделю назад" : "На прошлой неделе"
+        } else if day >= 2 {
+            return "\(day) \(pluralForm(n: day, form1: "день", form2: "дня", form5: "дней")) назад"
+        } else if day >= 1 {
+            return numericDates ? "1 день назад" : "Вчера"
+        } else if hour >= 2 {
+            return "\(hour) \(pluralForm(n: hour, form1: "час", form2: "часа", form5: "часов")) назад"
+        } else if hour >= 1 {
+            return numericDates ? "1 час назад" : "Час назад"
+        } else if minute >= 2 {
+            return "\(minute) \(pluralForm(n: minute, form1: "минуту", form2: "минуты", form5: "минут")) назад"
+        } else if minute >= 1 {
+            return numericDates ? "1 минуту назад" : "Минуту назад"
         } else {
-            return "Just now"
+            return "Только что"
         }
     }
 }
